@@ -1,0 +1,4 @@
+{
+  "summary": "Rebuilt the empty portfolio as a Vite + React site that follows the Swarm scroll-built canvas: paper background, Inter and JetBrains Mono, rules, guides, selection boxes, rulers, and colored cursors that draw and type the page. All copy is Sankar MS's AI engineer content from src/data/portfolio.ts, with empty social URLs left as placeholders. Verified the finished layout, contact button, section navigation, mobile width without horizontal overflow, and the cursor intro. Small screens use the reference's scale-to-fit behavior, so type gets smaller rather than reflowing.",
+  "current_status": "Production build succeeds. Run npm run dev to watch the cursors assemble the page, or open with ?built=1 to see the finished layout. Contact URLs still need to be filled in src/data/portfolio.ts."
+}

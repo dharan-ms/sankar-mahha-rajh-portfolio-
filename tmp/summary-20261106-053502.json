@@ -1,0 +1,4 @@
+{
+  "summary": "Closed the empty band between the about paragraph and the specializations grid by moving that grid and every section below it up by 400 design pixels. The paragraph now ends about 150 pixels above LLM Engineering, and the work, project, stack, writing, contact, and footer sections keep their internal spacing. Verified in the browser on the built page.",
+  "current_status": "Portfolio copy is in place and the about-to-specializations gap is tightened. Social URLs are still empty placeholders."
+}

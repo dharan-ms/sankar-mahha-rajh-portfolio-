@@ -1,0 +1,4 @@
+{
+  "summary": "Finished dark and light mode. The canvas recolors through a paint map so paper, ink, cards, rules, and buttons switch without rebuilding the scene. A fixed Dark mode / Light mode button stores the choice in localStorage and starts from prefers-color-scheme. Typecheck passed. Both themes were clicked in the browser: dark uses light text and light primary buttons, light restores the original Swarm palette, and the terminal stays dark in both.",
+  "current_status": "Portfolio matches the Swarm canvas and the Lovable draft copy. Animation draws on scroll without ?built=1. Dark and light mode both work and persist. No personal email or profile URLs were invented. Nothing is committed."
+}

@@ -1,0 +1,4 @@
+{
+  "summary": "Restored the cursor drawing animation. Text had been revealed in full as soon as a section scrolled into view, so the cursors had nothing left to draw and only drifted. Cursors now place the boxes and type the words again, in short bursts so the frames do not stay empty. Verified on localhost:5173 without the built flag: after a scroll, the headline, buttons, organizations, and about copy appeared while the cursors were still working.",
+  "current_status": "The swarm draw animation runs again on a normal page load. Open localhost:5173 without ?built=1 and scroll to watch it. Social profile URLs are still the draft homepages, and the personal email is still unset."
+}

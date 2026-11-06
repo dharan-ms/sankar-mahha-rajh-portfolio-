@@ -1,0 +1,4 @@
+{
+  "summary": "Copied the Lovable draft's wording into the matching portfolio sections: hero, about, experience including IndicGLUE, full project descriptions, stack names, articles, and contact. Social links use the draft's github, linkedin, twitter, and huggingface URLs. The draft email arjun@arjunravi.dev was left off because it is a different person's address.",
+  "current_status": "The swarm portfolio now carries the draft site's copy in each section. A personal email and real profile URLs are still needed if the homepage links should be replaced."
+}
