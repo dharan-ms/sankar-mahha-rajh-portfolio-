@@ -40,17 +40,28 @@ html, body {
 .skip:focus { transform: none; }
 
 .theme-toggle {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 40;
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 0;
   border: 1px solid var(--ink);
   background: var(--paper);
   color: var(--ink);
   border-radius: 999px;
-  padding: 8px 14px;
-  font: 600 13px Inter, system-ui, sans-serif;
   cursor: pointer;
+}
+
+.theme-toggle svg { display: block; width: 50%; height: 50%; }
+
+.theme-toggle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
 }
 
 .theme-toggle:focus-visible {

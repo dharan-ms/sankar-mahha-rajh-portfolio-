@@ -360,7 +360,36 @@ function navigate(engine: Engine, href: string, event: MouseEvent) {
   history.replaceState(null, "", href === "#top" ? location.pathname + location.search : href);
 }
 
-export function Stage({ engine, theme }: { engine: Engine; theme: ThemeName }) {
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M12 2.5v2.2M12 19.3V21.5M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function Stage({ engine, theme, onTheme }: { engine: Engine; theme: ThemeName; onTheme: (theme: ThemeName) => void }) {
   const { s, left } = engine.vp;
   const onNavigate = (href: string, event: MouseEvent) => navigate(engine, href, event);
   const sticky = engine.list.filter((el) => el.sticky);
@@ -374,6 +403,17 @@ export function Stage({ engine, theme }: { engine: Engine; theme: ThemeName }) {
           <div className="nav-canvas" style={{ width: CANVAS_W, transform: `translateX(${left}px) scale(${s}) translateY(${-NAV_OFFSET}px)` }}>
             <Layer els={sticky} height={NAV_OFFSET + NAV_HEIGHT + 40} onNavigate={onNavigate} />
           </div>
+          <button
+            type="button"
+            className="theme-toggle"
+            aria-pressed={theme === "dark"}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+            style={{ top: 12 * s, left: left + 1220 * s, width: 40 * s, height: 40 * s }}
+            onClick={() => onTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+          </button>
         </div>
         <div className="canvas" style={{ width: CANVAS_W, height: engine.height, transform: `translateX(${left}px) scale(${s})` }}>
           <Layer els={rest} height={engine.height} onNavigate={onNavigate} />

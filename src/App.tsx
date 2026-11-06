@@ -22,14 +22,6 @@ export default function App() {
       <a className="skip" href="#about">
         Skip to content
       </a>
-      <button
-        type="button"
-        className="theme-toggle"
-        aria-pressed={theme === "dark"}
-        onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-      >
-        {theme === "dark" ? "Light mode" : "Dark mode"}
-      </button>
       <nav className="sr-only" aria-label="Sections">
         {links.map((link) => (
           <a key={link.href + link.label} href={link.href}>
@@ -37,7 +29,13 @@ export default function App() {
           </a>
         ))}
       </nav>
-      <main>{engine ? <Stage engine={engine} theme={theme} /> : <div className="page" style={{ minHeight: "100vh" }} />}</main>
+      <main>
+        {engine ? (
+          <Stage engine={engine} theme={theme} onTheme={(next) => setTheme(next)} />
+        ) : (
+          <div className="page" style={{ minHeight: "100vh" }} />
+        )}
+      </main>
     </>
   );
 }
