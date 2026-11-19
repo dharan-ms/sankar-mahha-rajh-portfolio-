@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState, type CSSProperties, type MouseEvent, type ReactNode, createContext } from "react";
+import { useEffect, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import { CursorView } from "./cursors";
 import { Engine, fontFamily, lineHeight } from "./engine";
 import { MARK } from "./scene";
-import { paint, type ThemeName } from "./theme";
 import { CANVAS_W, type El, type OverlayItem, type TextEl } from "./types";
 
 const BLUE = "#0D99FF";
@@ -10,8 +9,6 @@ const RED = "#F24822";
 const RULER = 20;
 const NAV_OFFSET = 24;
 const NAV_HEIGHT = 64;
-const ThemeContext = createContext<ThemeName>("light");
-
 function codeLine(text: string): ReactNode {
   if (text.trimStart().startsWith("#")) return <span style={{ color: "#6B7078" }}>{text}</span>;
   const parts: ReactNode[] = [];
@@ -42,7 +39,6 @@ function codeLine(text: string): ReactNode {
 }
 
 function TextView({ el, onNavigate }: { el: TextEl; onNavigate: (href: string, event: MouseEvent) => void }) {
-  const theme = useContext(ThemeContext);
   if (!el.vis) return null;
   const style: CSSProperties = {
     left: el.x + el.dx,
@@ -54,7 +50,7 @@ function TextView({ el, onNavigate }: { el: TextEl; onNavigate: (href: string, e
     fontWeight: el.st.weight,
     lineHeight: `${lineHeight(el.st, el.size)}px`,
     letterSpacing: `${el.st.ls ?? 0}em`,
-    color: paint(el.st.color, theme),
+    color: el.st.color,
     textAlign: el.align,
   };
   const body = (
@@ -79,16 +75,15 @@ function TextView({ el, onNavigate }: { el: TextEl; onNavigate: (href: string, e
 }
 
 function RectView({ el, onNavigate }: { el: Extract<El, { kind: "rect" }>; onNavigate: (href: string, event: MouseEvent) => void }) {
-  const theme = useContext(ThemeContext);
   if (!el.vis) return null;
   const style: CSSProperties = {
     left: el.x + el.dx,
     top: el.y + el.dy,
     width: el.draw?.w ?? el.w,
     height: el.draw?.h ?? el.h,
-    background: el.styled ? paint(el.fill, theme) : paint("#D9D9D9", theme),
+    background: el.id === "g-fill" ? "linear-gradient(90deg, #5B45E0, #E23D78, #14B8A6)" : el.styled ? el.fill : "#D9D9D9",
     borderRadius: el.styled ? el.r : 0,
-    boxShadow: el.styled && el.stroke ? `inset 0 0 0 1px ${paint(el.stroke, theme)}` : "none",
+    boxShadow: el.styled && el.stroke ? `inset 0 0 0 1px ${el.stroke}` : "none",
   };
   if (el.href) {
     return (
@@ -99,7 +94,6 @@ function RectView({ el, onNavigate }: { el: Extract<El, { kind: "rect" }>; onNav
 }
 
 function PathView({ el }: { el: Extract<El, { kind: "path" }> }) {
-  const theme = useContext(ThemeContext);
   if (!el.vis || el.placed === 0) return null;
   if (el.d && el.tf) {
     const progress = Math.min(1, (el.placed - 1) / Math.max(1, el.pts.length));
@@ -110,9 +104,9 @@ function PathView({ el }: { el: Extract<El, { kind: "path" }> }) {
         pathLength={1}
         strokeDasharray="1 1"
         strokeDashoffset={1 - progress}
-        stroke={paint(el.stroke, theme)}
+        stroke={el.stroke}
         strokeWidth={1.2 / el.tf.s}
-        fill={paint(el.fill, theme)}
+        fill={el.fill}
         fillOpacity={el.fillOn ? 1 : 0}
         style={{ transition: "fill-opacity 220ms ease, stroke-dashoffset 120ms linear" }}
       />
@@ -125,9 +119,9 @@ function PathView({ el }: { el: Extract<El, { kind: "path" }> }) {
   return (
     <path
       d={d}
-      stroke={paint(el.stroke, theme)}
+      stroke={el.stroke}
       strokeWidth={el.sw}
-      fill={el.fill ? paint(el.fill, theme) : "none"}
+      fill={el.fill ?? "none"}
       fillOpacity={el.fillOn ? 1 : 0}
       style={{ transition: "fill-opacity 220ms ease" }}
       vectorEffect="non-scaling-stroke"
@@ -360,67 +354,27 @@ function navigate(engine: Engine, href: string, event: MouseEvent) {
   history.replaceState(null, "", href === "#top" ? location.pathname + location.search : href);
 }
 
-function SunIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M12 2.5v2.2M12 19.3V21.5M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function MoonIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function Stage({ engine, theme, onTheme }: { engine: Engine; theme: ThemeName; onTheme: (theme: ThemeName) => void }) {
+export function Stage({ engine }: { engine: Engine }) {
   const { s, left } = engine.vp;
   const onNavigate = (href: string, event: MouseEvent) => navigate(engine, href, event);
   const sticky = engine.list.filter((el) => el.sticky);
   const rest = engine.list.filter((el) => !el.sticky);
   const navVisible = sticky.some((el) => el.vis);
   return (
-    <ThemeContext.Provider value={theme}>
+    <>
       <div className="page" style={{ height: engine.height * s }}>
         <div className="nav-sticky" style={{ marginTop: NAV_OFFSET * s, height: NAV_HEIGHT * s, top: RULER * engine.rulers.t }}>
           {navVisible && <div className="nav-backdrop" />}
           <div className="nav-canvas" style={{ width: CANVAS_W, transform: `translateX(${left}px) scale(${s}) translateY(${-NAV_OFFSET}px)` }}>
             <Layer els={sticky} height={NAV_OFFSET + NAV_HEIGHT + 40} onNavigate={onNavigate} />
           </div>
-          <button
-            type="button"
-            className="theme-toggle"
-            aria-pressed={theme === "dark"}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={theme === "dark" ? "Light mode" : "Dark mode"}
-            style={{ top: 12 * s, left: left + 1220 * s, width: 40 * s, height: 40 * s }}
-            onClick={() => onTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
-          </button>
         </div>
         <div className="canvas" style={{ width: CANVAS_W, height: engine.height, transform: `translateX(${left}px) scale(${s})` }}>
           <Layer els={rest} height={engine.height} onNavigate={onNavigate} />
         </div>
         <div className={`intro-logo${engine.started ? " gone" : ""}`} aria-hidden="true">
           <svg viewBox="0 0 120 160" width="60" height="80">
-            <path d={MARK.d} fill={paint("#D7DADE", theme)} />
+            <path d={MARK.d} fill="#D7DADE" />
           </svg>
         </div>
         <Overlay engine={engine} />
@@ -436,7 +390,7 @@ export function Stage({ engine, theme, onTheme }: { engine: Engine; theme: Theme
         </div>
       </div>
       <Rulers engine={engine} />
-    </ThemeContext.Provider>
+    </>
   );
 }
 

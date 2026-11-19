@@ -1,0 +1,4 @@
+{
+  "summary": "The two remaining Edge Tools warnings were on the deleted film page, which used a 1920 by 1080 viewport and had no title. That page is now a small valid document with width=device-width, initial-scale=1 and a title. The film itself stays removed.",
+  "current_status": "The portfolio is light-only with the pigment palette and a Safari-compatible nav blur. The brag film is gone; only a valid composition index remains so those two warnings can clear. Nothing from this pass is committed or deployed."
+}

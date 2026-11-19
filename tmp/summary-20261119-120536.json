@@ -1,0 +1,4 @@
+{
+  "summary": "Made a 21.5-second landscape brag film for the Sankar MS portfolio. It uses the site's paper, type, cursors, and system diagram, with a quiet music bed. The file is brag-output/brag.mp4, the poster is brag-output/brag.jpg, and the caption is brag-output/share-copy.txt. Hyperframes check passed before the render.",
+  "current_status": "The portfolio is on GitHub and Vercel. A professional social video is rendered locally in brag-output and has not been posted or committed."
+}

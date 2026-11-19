@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { portfolio } from "./data/portfolio";
 import { Stage, useEngine } from "./engine/Stage";
-import { readTheme, type ThemeName } from "./engine/theme";
 
 const links = [
   ...portfolio.nav,
@@ -12,11 +10,6 @@ const links = [
 
 export default function App() {
   const engine = useEngine();
-  const [theme, setTheme] = useState<ThemeName>(readTheme);
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("theme", theme);
-  }, [theme]);
   return (
     <>
       <a className="skip" href="#about">
@@ -31,7 +24,7 @@ export default function App() {
       </nav>
       <main>
         {engine ? (
-          <Stage engine={engine} theme={theme} onTheme={(next) => setTheme(next)} />
+          <Stage engine={engine} />
         ) : (
           <div className="page" style={{ minHeight: "100vh" }} />
         )}

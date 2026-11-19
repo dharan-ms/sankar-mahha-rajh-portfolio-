@@ -1,17 +1,13 @@
-:root, :root[data-theme="light"] {
-  --paper: #f8f9fa;
+:root {
+  --paper: #f6f3ec;
   --ink: #121417;
   --muted: #62666d;
-  --accent: #4c5bd4;
+  --accent: #5b45e0;
+  --wash-a: #5b45e055;
+  --wash-b: #e24b8a38;
+  --wash-c: #14b8a640;
+  --wash-d: #1d4ed833;
   color-scheme: light;
-}
-
-:root[data-theme="dark"] {
-  --paper: #101114;
-  --ink: #f2f3f5;
-  --muted: #a7adb6;
-  --accent: #9aa6f5;
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -23,6 +19,25 @@ html, body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   font-family: Inter, system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 32% at 14% 16%, var(--wash-a), transparent 70%),
+    radial-gradient(34% 30% at 88% 10%, var(--wash-b), transparent 68%),
+    radial-gradient(40% 34% at 80% 82%, var(--wash-c), transparent 70%),
+    radial-gradient(32% 28% at 16% 84%, var(--wash-d), transparent 70%);
+  animation: pigment 26s ease-in-out infinite alternate;
+}
+
+@keyframes pigment {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-4%, 3%, 0) scale(1.08); }
 }
 
 .skip {
@@ -39,38 +54,9 @@ html, body {
 
 .skip:focus { transform: none; }
 
-.theme-toggle {
-  position: absolute;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--ink);
-  background: var(--paper);
-  color: var(--ink);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.theme-toggle svg { display: block; width: 50%; height: 50%; }
-
-.theme-toggle::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 32px;
-  height: 32px;
-  transform: translate(-50%, -50%);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
 .page {
   position: relative;
+  z-index: 1;
   width: 100%;
   overflow: clip;
   display: flow-root;
@@ -92,7 +78,9 @@ html, body {
 .nav-backdrop {
   position: absolute;
   inset: 0;
-  background: var(--paper);
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .nav-canvas {
@@ -126,6 +114,14 @@ a.el-text:focus-visible, a.el-rect:focus-visible {
 .el-rect {
   position: absolute;
   transition: background-color .22s ease, border-radius .22s ease, box-shadow .22s ease;
+  animation: settle .6s cubic-bezier(.2, .7, .2, 1);
+}
+
+h2.el-text { animation: settle .7s cubic-bezier(.2, .7, .2, 1); }
+
+@keyframes settle {
+  from { opacity: 0; translate: 0 12px; }
+  to { opacity: 1; translate: 0 0; }
 }
 
 .text-sel { background: #0d99ff47; }
@@ -165,7 +161,7 @@ a.el-text:focus-visible, a.el-rect:focus-visible {
 }
 
 .cursor { position: absolute; top: 0; left: 0; will-change: transform; }
-.cursor svg { position: absolute; overflow: visible; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .28)); }
+.cursor svg { position: absolute; overflow: visible; filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--accent) 55%, transparent)); }
 
 .ruler {
   position: fixed;
@@ -213,5 +209,5 @@ a.el-text:focus-visible, a.el-rect:focus-visible {
 .noscript h1, .noscript h2 { color: var(--ink); letter-spacing: -0.03em; }
 
 @media (prefers-reduced-motion: reduce) {
-  .caret, .intro-logo { animation: none; transition: none; }
+  .caret, .intro-logo, body::before, .el-rect, h2.el-text { animation: none; transition: none; }
 }

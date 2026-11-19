@@ -1,0 +1,4 @@
+{
+  "summary": "The theme icon was sitting above the nav row and crossing the top rule. It now uses the same height and vertical center as the contact button, centered in the right margin, and sticks with the nav while scrolling. Sun and moon still switch the theme. Checked in the browser at the top of the page and after scrolling.",
+  "current_status": "Portfolio has the Swarm canvas, Lovable draft copy, scroll animation, and a light/dark toggle aligned with the nav. No personal email or profile URLs were invented. Nothing new is committed."
+}

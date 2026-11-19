@@ -1,0 +1,4 @@
+{
+  "summary": "Removed dark mode. The sun/moon toggle, the dark color map, and the saved theme preference are gone. The site stays on the light paper, violet, coral, and teal palette. Typecheck passed, and the live page has no theme button, no data-theme attribute, and a light color scheme.",
+  "current_status": "The portfolio is light-only locally. The pigment wash and scroll drawing remain. This change is not committed or deployed."
+}

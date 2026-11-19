@@ -16,10 +16,14 @@ import {
 } from "./types";
 
 const ink = "#121417";
-const solid = "#16181C";
+const solid = "#2A215F";
 const muted = "#62666D";
 const line = "#D7DADE";
-const accent = "#4C5BD4";
+const accent = "#5B45E0";
+const coral = "#C2410C";
+const teal = "#0F766E";
+const blue = "#1D4ED8";
+const rose = "#BE185D";
 const card = "#FFFFFF";
 const codeBg = "#131518";
 const onSolid = "#F7F8FA";
@@ -271,27 +275,27 @@ export function buildScene(agentCount: () => number): Scene {
     groups.push(group);
   };
 
-  const band = (name: string, top: number, bottom: number, full = false) => {
+  const band = (name: string, top: number, bottom: number, full = false, stroke = line) => {
     const dir = full ? [OFF_R, OFF_L] : [OFF_L, OFF_R];
     path(`rule-${name}`, [
       { x: dir[0], y: bottom },
       { x: dir[1], y: bottom },
-    ]);
+    ], { stroke });
     path(`left-${name}`, [
       { x: MARGIN, y: top },
       { x: MARGIN, y: bottom },
-    ]);
+    ], { stroke });
     path(`right-${name}`, [
       { x: RIGHT, y: bottom },
       { x: RIGHT, y: top },
-    ]);
+    ], { stroke });
   };
 
-  const vline = (id: string, x: number, y0: number, y1: number, deps?: string[]) =>
+  const vline = (id: string, x: number, y0: number, y1: number, deps?: string[], stroke?: string) =>
     path(id, [
       { x, y: y0 },
       { x, y: y1 },
-    ], { deps });
+    ], { deps, stroke });
 
   const mark = (id: string, x: number, y: number, size: number) => {
     const tf = { x, y, s: size / 140 };
@@ -307,7 +311,7 @@ export function buildScene(agentCount: () => number): Scene {
     { x: OFF_L, y: 24 },
     { x: OFF_R, y: 24 },
   ], { add: false });
-  band("nav", 24, 88, true);
+  band("nav", 24, 88, true, accent);
   mark("mark", MARGIN + 18, 40, 26);
   text("brand", MARGIN + 52, 46, portfolio.name, R.brand, { href: "#top" });
   text("nav0", 500, 48, portfolio.nav[0].label, R.nav, { href: portfolio.nav[0].href });
@@ -330,14 +334,14 @@ export function buildScene(agentCount: () => number): Scene {
   });
   for (const el of els.slice(navFrom)) el.sticky = true;
 
-  band("hero", 88, 700);
-  vline("hero-div", 740, 88, 700);
+  band("hero", 88, 700, false, accent);
+  vline("hero-div", 740, 88, 700, undefined, accent);
   guide("g-hero", "x", CONTENT_X, 130);
   guide("g-hero-r", "x", 776, 130);
   text("h-title", CONTENT_X, 188, portfolio.headline, R.h1, { w: 560, snap: "g-hero", grow: true, tag: "h1" });
-  text("h-lead", CONTENT_X, 348, portfolio.tagline, R.lead, { w: 520, snap: "g-hero" });
+  text("h-lead", CONTENT_X, 348, portfolio.tagline, sans(19, 500, 1.5, accent, -0.01), { w: 520, snap: "g-hero" });
   text("h-support", CONTENT_X, 392, portfolio.heroSupport, R.body, { w: 500, snap: "g-hero" });
-  text("h-pills", CONTENT_X, 500, portfolio.pills.join("   "), R.item, { w: 560, snap: "g-hero" });
+  text("h-pills", CONTENT_X, 500, portfolio.pills.join("   "), sans(14.5, 600, 1.4, coral, -0.005), { w: 560, snap: "g-hero" });
   rect("h-btn1", CONTENT_X, 544, 196, 48, { r: 8, fill: solid, href: portfolio.actions[0].href });
   text("h-btn1-t", CONTENT_X, 557, portfolio.actions[0].label, R.btn, {
     w: 196,
@@ -345,7 +349,7 @@ export function buildScene(agentCount: () => number): Scene {
     deps: ["r:h-btn1"],
     href: portfolio.actions[0].href,
   });
-  rect("h-btn2", CONTENT_X + 212, 544, 210, 48, { r: 8, fill: card, stroke: line, href: portfolio.actions[1].href });
+  rect("h-btn2", CONTENT_X + 212, 544, 210, 48, { r: 8, fill: card, stroke: coral, href: portfolio.actions[1].href });
   text("h-btn2-t", CONTENT_X + 212, 557, portfolio.actions[1].label, R.btnDark, {
     w: 210,
     align: "center",
@@ -366,7 +370,7 @@ export function buildScene(agentCount: () => number): Scene {
     { x: 1074, y: 300 },
     { x: 1074, y: 328 },
   ], { stroke: "#9DA2A9", deps: [stem] });
-  rect("w0", 776, 328, 180, 64, { r: 10, fill: card, stroke: line });
+  rect("w0", 776, 328, 180, 64, { r: 10, fill: card, stroke: "#C4B5FD" });
   text("w0-n", 796, 339, portfolio.diagram.nodes[0].name, R.nodeName, { deps: ["r:w0"] });
   text("w0-s", 796, 361, portfolio.diagram.nodes[0].meta, mono(12, accent), { deps: ["r:w0"] });
   dup("workers", ["w0", "w0-n", "w0-s"], [
@@ -386,7 +390,7 @@ export function buildScene(agentCount: () => number): Scene {
   rect("g-fill", 776, 548, 252, 6, { r: 3, fill: accent, deps: ["r:g-track"] });
   text("g-stat", 776, 568, portfolio.diagram.footer, R.small, { snap: "g-hero-r" });
 
-  band("logos", 700, 832, true);
+  band("logos", 700, 832, true, coral);
   text("l-label", CONTENT_X, 752, portfolio.organizations.label, R.small, { w: 200 });
   portfolio.organizations.names.forEach((_, index) => vline(`l-div${index}`, 340 + index * 220, 700, 832));
   text("logo0", 364, 746, portfolio.organizations.names[0], R.logo);
@@ -398,16 +402,16 @@ export function buildScene(agentCount: () => number): Scene {
 
   const aboutTop = 832;
   anchors[portfolio.about.id] = aboutTop;
-  band("about", aboutTop, 1280);
+  band("about", aboutTop, 1280, false, accent);
   guide("g-about", "x", CONTENT_X, 860);
-  text("a-title", CONTENT_X, 900, portfolio.about.title, R.h2, { w: 720, snap: "g-about", grow: true, tag: "h2" });
+  text("a-title", CONTENT_X, 900, portfolio.about.title, sans(40, 600, 1.08, accent, -0.03), { w: 720, snap: "g-about", grow: true, tag: "h2" });
   text("a-essay", CONTENT_X, 990, portfolio.about.essay, R.body, { w: 860 });
   text("a-focus", CONTENT_X, 1080, portfolio.about.focus, R.body, { w: 860 });
   text("a-aside", CONTENT_X, 1208, portfolio.about.aside, R.body, { w: 860 });
 
   const specTop = 1280;
   const specBot = 2080;
-  band("specs", specTop, specBot, true);
+  band("specs", specTop, specBot, true, rose);
   path("spec-a", [
     { x: OFF_L, y: 1528 },
     { x: OFF_R, y: 1528 },
@@ -449,10 +453,10 @@ export function buildScene(agentCount: () => number): Scene {
   const workTop = 2080;
   const workBot = 2920;
   anchors[portfolio.experience.id] = workTop;
-  band("work", workTop, workBot);
+  band("work", workTop, workBot, false, coral);
   vline("work-div", 700, workTop, workBot);
   guide("g-work", "x", CONTENT_X, workTop + 24);
-  text("w-title", CONTENT_X, 2144, portfolio.experience.title, R.h2, { w: 520, snap: "g-work", grow: true, tag: "h2" });
+  text("w-title", CONTENT_X, 2144, portfolio.experience.title, sans(40, 600, 1.08, coral, -0.03), { w: 520, snap: "g-work", grow: true, tag: "h2" });
   text("w-co", CONTENT_X, 2264, portfolio.experience.company, R.h3, { tag: "h3" });
   text("w-role", CONTENT_X, 2300, `${portfolio.experience.position}  ·  ${portfolio.experience.duration}`, R.item);
   text(
@@ -468,7 +472,7 @@ export function buildScene(agentCount: () => number): Scene {
   text("w-resume", CONTENT_X, 2848, portfolio.experience.resume, R.item, { w: 520 });
 
   const win = rect("c-win", 744, 2188, 420, 392, { r: 12, fill: codeBg });
-  for (let i = 0; i < 3; i++) rect(`c-dot${i}`, 768 + i * 18, 2206, 10, 10, { r: 5, fill: "#30343A", deps: [win] });
+  ["#FF5F57", "#FEBC2E", "#28C840"].forEach((fill, i) => rect(`c-dot${i}`, 768 + i * 18, 2206, 10, 10, { r: 5, fill, deps: [win] }));
   const fileWidth = measure(portfolio.experience.windowFile, R.codeDim, R.codeDim.size).w;
   text("c-file", 1140 - fileWidth, 2204, portfolio.experience.windowFile, R.codeDim, { deps: [win] });
   path("c-sep", [
@@ -481,7 +485,7 @@ export function buildScene(agentCount: () => number): Scene {
 
   const statTop = 2920;
   const statBot = 3140;
-  band("stats", statTop, statBot, true);
+  band("stats", statTop, statBot, true, teal);
   [400, 680, 960].forEach((x) => vline(`s-div${x}`, x, statTop, statBot));
   guide("g-stats", "y", 2980, statTop + 16);
   guide("g-stats-x", "x", CONTENT_X, statTop + 16);
@@ -496,16 +500,20 @@ export function buildScene(agentCount: () => number): Scene {
       edits: [item.value, item.label],
     })),
   );
+  ["#5B45E0", "#C2410C", "#0F766E", "#1D4ED8"].forEach((color, index) => {
+    const el = byId.get(index === 0 ? "st-n" : `st-n~${index}`);
+    if (el?.kind === "text") el.st = { ...el.st, color };
+  });
 
   const projectTop = 3140;
   const projectBot = 4460;
   anchors[portfolio.projects.id] = projectTop;
-  band("projects", projectTop, projectBot, true);
+  band("projects", projectTop, projectBot, true, blue);
   guide("g-proj", "x", CONTENT_X, projectTop + 20);
-  text("p-title", CONTENT_X, 3204, portfolio.projects.title, R.h2, { w: 680, snap: "g-proj", grow: true, tag: "h2" });
+  text("p-title", CONTENT_X, 3204, portfolio.projects.title, sans(40, 600, 1.08, blue, -0.03), { w: 680, snap: "g-proj", grow: true, tag: "h2" });
   const projects = portfolio.projects.items;
   const cardY = 3328;
-  rect("pc", 116, cardY, 330, 430, { r: 14, fill: card, stroke: line });
+  rect("pc", 116, cardY, 330, 430, { r: 14, fill: card, stroke: "#C4B5FD" });
   text("pc-name", 144, cardY + 24, projects[0].name, R.h3, { w: 274, deps: ["r:pc"], tag: "h3" });
   text("pc-sum", 144, cardY + 96, projects[0].summary, R.body, { w: 274, deps: ["r:pc"] });
   text("pc-feat", 144, cardY + 300, projects[0].features.join("\n"), R.item, { w: 274, deps: ["r:pc"] });
@@ -530,9 +538,9 @@ export function buildScene(agentCount: () => number): Scene {
   const stackTop = 4460;
   const stackBot = 5320;
   anchors[portfolio.stack.id] = stackTop;
-  band("stack", stackTop, stackBot);
+  band("stack", stackTop, stackBot, false, teal);
   guide("g-stack", "x", CONTENT_X, stackTop + 20);
-  text("k-title", CONTENT_X, 4524, portfolio.stack.title, R.h2, { w: 520, snap: "g-stack", grow: true, tag: "h2" });
+  text("k-title", CONTENT_X, 4524, portfolio.stack.title, sans(40, 600, 1.08, teal, -0.03), { w: 520, snap: "g-stack", grow: true, tag: "h2" });
   text("k-lead", CONTENT_X, 4604, portfolio.stack.lead, R.body, { w: 720 });
   vline("k-v1", 453, 4680, 5140);
   vline("k-v2", 736, 4680, 5140);
@@ -553,14 +561,14 @@ export function buildScene(agentCount: () => number): Scene {
   const writeTop = 5320;
   const writeBot = 6100;
   anchors[portfolio.writing.id] = writeTop;
-  band("writing", writeTop, writeBot, true);
+  band("writing", writeTop, writeBot, true, rose);
   path("write-mid", [
     { x: OFF_L, y: 5720 },
     { x: OFF_R, y: 5720 },
   ]);
   vline("write-v", 640, writeTop, writeBot);
   guide("g-write", "x", CONTENT_X, writeTop + 20);
-  text("wr-title", CONTENT_X, 5384, portfolio.writing.title, R.h2, { w: 760, snap: "g-write", grow: true, tag: "h2" });
+  text("wr-title", CONTENT_X, 5384, portfolio.writing.title, sans(40, 600, 1.08, rose, -0.03), { w: 760, snap: "g-write", grow: true, tag: "h2" });
   const articles = portfolio.writing.items;
   text("ar-y", CONTENT_X, 5508, articles[0].year, R.year);
   text("ar-t", CONTENT_X, 5536, articles[0].title, R.h3, { w: 460, tag: "h3" });
@@ -574,7 +582,7 @@ export function buildScene(agentCount: () => number): Scene {
   const contactTop = 6100;
   const contactBot = 6760;
   anchors[portfolio.contact.id] = contactTop;
-  band("contact", contactTop, contactBot);
+  band("contact", contactTop, contactBot, false, accent);
   vline("contact-div", 760, contactTop, contactBot);
   guide("g-cta", "x", CONTENT_X, contactTop + 24);
   guide("g-cta-r", "x", 820, contactTop + 24);
@@ -601,7 +609,7 @@ export function buildScene(agentCount: () => number): Scene {
 
   const footTop = 6760;
   const footBot = 7160;
-  band("footer", footTop, footBot, true);
+  band("footer", footTop, footBot, true, coral);
   mark("fmark", CONTENT_X, 6808, 26);
   text("f-brand", CONTENT_X + 32, 6816, portfolio.footer.mark, R.brand);
   text("f-loc", CONTENT_X, 6864, portfolio.footer.location, R.small);

@@ -1,0 +1,4 @@
+{
+  "summary": "Moved the theme control from the bottom-right text pill to a fixed round button at the top right, in the margin beside the contact button. Light mode shows a sun icon and dark mode shows a moon. Both states were clicked in the browser and stay clear of the contact label on the desktop layout.",
+  "current_status": "Portfolio has Swarm canvas, Lovable draft copy, scroll animation, and persisted light/dark mode with a stable top-right sun/moon toggle. No personal email or profile URLs were invented. Nothing new is committed."
+}

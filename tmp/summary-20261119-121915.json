@@ -1,0 +1,4 @@
+{
+  "summary": "Added the Safari-prefixed backdrop blur on the nav so the Edge Tools compatibility warning in src/styles.css is addressed. The other two warnings are on brag-output/composition/index.html, which is no longer on disk, so there is no viewport or title left to edit. The live page still loads in light mode with the nav blur applied.",
+  "current_status": "The portfolio is light-only with the pigment palette and a Safari-compatible nav blur. Dark mode and the brag film stay removed. Nothing from this pass is committed or deployed."
+}
